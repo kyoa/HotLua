@@ -19,6 +19,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
+
 #if UE_5_0_OR_LATER
 using EpicGames.Core;
 #else
@@ -26,19 +27,20 @@ using Tools.DotNETCommon;
 #endif
 using UnrealBuildTool;
 
+
 public class Lua : ModuleRules
 {
     public Lua(ReadOnlyTargetRules Target) : base(Target)
     {
         Type = ModuleType.External;
 
-    #if UE_5_6_OR_LATER
+#if UE_5_6_OR_LATER
         CppCompileWarningSettings.UndefinedIdentifierWarningLevel = WarningLevel.Off;
         CppCompileWarningSettings.ShadowVariableWarningLevel = WarningLevel.Off;
-    #else
+#else
         UndefinedIdentifierWarningLevel = WarningLevel.Off;
         ShadowVariableWarningLevel = WarningLevel.Off;
-    #endif
+#endif
 
         m_LuaVersion = GetLuaVersion();
         m_Config = GetConfigName();
@@ -196,6 +198,22 @@ public class Lua : ModuleRules
     {
 #if UE_5_2_OR_LATER
         var abiName = Target.Architecture.ToString();
+        if (Target.Platform == UnrealTargetPlatform.Mac)
+        {
+            // 系统级架构检测
+            var startInfo = new ProcessStartInfo
+            {
+                FileName = "/usr/bin/uname",
+                Arguments = "-m",
+                RedirectStandardOutput = true,
+                UseShellExecute = false
+            };
+            
+            var process = Process.Start(startInfo);
+            process.WaitForExit();
+            abiName = process.StandardOutput.ReadToEnd().Trim();
+        }
+        // var abiName = "x86_64";
 #else
         var abiName = Target.Architecture;
 #endif
