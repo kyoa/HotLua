@@ -1,5 +1,6 @@
 **/.DS_Store
 .vs/
+.vscode/
 Binaries/
 Build/
 DerivedDataCache/
@@ -12,10 +13,16 @@ Plugins/*/Intermediate/
 WindowsNoEditor/
 MacNoEditor/
 Android_*/
+CMakeFiles/
+CMakeCache.txt
+MakeFile
+*.cmake
+**/CMakeFiles/
 IOS/
-# *.sln
+*.sln
 *.VC.db
 *.xcworkspace
+*.code-workspace
 .idea
 /.idea
 /TPSProject.sln.DotSettings.user
